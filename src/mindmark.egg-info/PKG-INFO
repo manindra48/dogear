@@ -1,13 +1,40 @@
+Metadata-Version: 2.4
+Name: dogear
+Version: 0.1.3
+Summary: Local semantic search over your browser bookmarks — on-device embeddings, no cloud.
+License-Expression: MIT
+Project-URL: Homepage, https://github.com/manindra48/dogear
+Keywords: bookmarks,semantic-search,embeddings,cli,ai
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Classifier: Environment :: Console
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: fastembed>=0.3.0
+Requires-Dist: numpy>=1.24
+Provides-Extra: dev
+Requires-Dist: pytest>=7; extra == "dev"
+Requires-Dist: build; extra == "dev"
+Requires-Dist: twine; extra == "dev"
+Dynamic: license-file
+
 <div align="center">
 
-# 🔖 Dogear
+# 🔖 dogear
 
 **Your bookmarks, finally searchable.**\
-Ask in natural language — Dogear finds what you saved.
+Ask in natural language — dogear remembers what you saved.
+
+[![PyPI](https://img.shields.io/pypi/v/dogear?color=blue&label=PyPI)](https://pypi.org/project/dogear/)
+[![Python](https://img.shields.io/pypi/pyversions/dogear)](https://pypi.org/project/dogear/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![CI](https://github.com/manindra48/dogear/actions/workflows/ci.yml/badge.svg)](https://github.com/manindra48/dogear/actions/workflows/ci.yml)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)]()
 
 100% local · No cloud · No API keys · Nothing leaves your machine
 
-<img src="assets/dogear-hero.gif" alt="Dogear demo" width="800" />
+<img src="assets/dogear-hero.gif" alt="dogear demo" width="800" />
 
 </div>
 
@@ -24,7 +51,6 @@ Ask in natural language — Dogear finds what you saved.
 - [Storage Layout](#-storage-layout)
 - [Uninstall](#-uninstall)
 - [Development](#-development)
-  - [Run from source](#run-from-source)
 - [License](#-license)
 
 ---
@@ -108,15 +134,8 @@ pip install dogear
 ```bash
 git clone https://github.com/manindra48/dogear.git
 cd dogear
-python3 -m venv .venv
-source .venv/bin/activate   # macOS / Linux — Windows: .venv\Scripts\Activate.ps1 or activate.bat
-pip install -e '.[dev]'
-dogear --help
+pip install -e .[dev]
 ```
-
-If `python3 -m venv` fails (for example `ensurepip` errors on some **Python 3.14** installs), create the environment with an older interpreter you have installed, e.g. `python3.12 -m venv .venv` or `python3.11 -m venv .venv`.
-
-See [Development → Run from source](#run-from-source) for the full local workflow.
 </details>
 
 ---
@@ -146,7 +165,7 @@ dogear index "$env:USERPROFILE\Downloads\bookmarks.html"
 ### 3️⃣ Search in natural language
 
 <p align="center">
-  <img src="assets/dogear-find.gif" alt="Dogear find demo" width="800" />
+  <img src="assets/dogear-find.gif" alt="dogear find demo" width="800" />
 </p>
 
 ```bash
@@ -252,8 +271,8 @@ Bookmarks HTML                                  "python async tutorial"
 
 | What | macOS / Linux | Windows | Override |
 |---|---|---|---|
-| Index database | `~/.dogear/index.db` | `%LOCALAPPDATA%\dogear\index.db` | `--db` flag or `DOGEAR_DB` env var |
-| Home directory | `~/.dogear/` | `%LOCALAPPDATA%\dogear\` | `DOGEAR_HOME` env var |
+| Index database | `~/.dogear/index.db` | `%LOCALAPPDATA%\dogear\index.db` | `--db` flag or `dogear_DB` env var |
+| Home directory | `~/.dogear/` | `%LOCALAPPDATA%\dogear\` | `dogear_HOME` env var |
 | Embedding model | `~/.cache/fastembed/` | `%LOCALAPPDATA%\fastembed\` | Managed by fastembed |
 
 ---
@@ -284,7 +303,7 @@ Remove-Item -Recurse "$env:LOCALAPPDATA\dogear"     # index database
 Remove-Item -Recurse "$env:LOCALAPPDATA\fastembed"     # cached embedding model
 ```
 
-> If you set a custom `DOGEAR_HOME`, remove that directory instead.
+> If you set a custom `dogear_HOME`, remove that directory instead.
 </details>
 
 ---
@@ -293,55 +312,10 @@ Remove-Item -Recurse "$env:LOCALAPPDATA\fastembed"     # cached embedding model
 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for full details.
 
-### Run from source
-
-Dogear is a **command-line tool**; there is no separate dev server. After an editable install, use the `dogear` entry point from your activated virtual environment.
-
-1. **Clone and enter the repo** (skip if you already have it).
-
-   ```bash
-   git clone https://github.com/manindra48/dogear.git
-   cd dogear
-   ```
-
-2. **Create and activate a virtual environment** (Python 3.9+).
-
-   ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate
-   ```
-
-   **Windows (PowerShell):** `python -m venv .venv; .venv\Scripts\Activate.ps1`  
-   **Windows (cmd):** `python -m venv .venv && .venv\Scripts\activate.bat`
-
-   If `python3 -m venv .venv` fails (for example `ensurepip` on some **Python 3.14** installs), use an explicit older interpreter: `python3.12 -m venv .venv` or `python3.11 -m venv .venv`.
-
-3. **Install in editable mode** (includes dev dependencies for tests).
-
-   ```bash
-   pip install -e '.[dev]'
-   ```
-
-4. **Verify the CLI**.
-
-   ```bash
-   dogear --help
-   ```
-
-5. **Use it** like the [Quick Start](#-quick-start): export bookmarks as HTML, then index and search.
-
-   ```bash
-   dogear index /path/to/bookmarks.html
-   dogear find "your search phrase"
-   dogear stats
-   dogear open "your search phrase"
-   ```
-
-By default the SQLite index lives under `~/.dogear/` (on Windows, `%LOCALAPPDATA%\dogear\`). To use another directory for data files, set **`DOGEAR_HOME`** to that folder, or pass **`--db /path/to/index.db`** on each command.
-
-### Tests
-
 ```bash
+git clone https://github.com/manindra48/dogear.git
+cd dogear
+pip install -e .[dev]
 pytest -q
 ```
 
@@ -381,7 +355,7 @@ Use `__token__` as the username when prompted.
 python -m build
 gh release create v0.1.0 dist/*
 # Users install:
-pipx install https://github.com/manindra/dogear/releases/download/v0.1.0/dogear-0.1.0-py3-none-any.whl
+pipx install https://github.com/manindra48/dogear/releases/download/v0.1.0/dogear-0.1.0-py3-none-any.whl
 ```
 
 ### Standalone executable (no Python required)

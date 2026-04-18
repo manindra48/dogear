@@ -1,0 +1,14 @@
+README.md
+pyproject.toml
+src/dogear/__init__.py
+src/dogear/__main__.py
+src/dogear/cli.py
+src/dogear/index.py
+src/dogear/parser.py
+src/dogear.egg-info/PKG-INFO
+src/dogear.egg-info/SOURCES.txt
+src/dogear.egg-info/dependency_links.txt
+src/dogear.egg-info/entry_points.txt
+src/dogear.egg-info/requires.txt
+src/dogear.egg-info/top_level.txt
+tests/test_parser.py

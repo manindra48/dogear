@@ -1,3 +1,23 @@
+Metadata-Version: 2.4
+Name: dogear
+Version: 0.1.3
+Summary: Dogear — local semantic search for saved bookmarks. On-device embeddings, no cloud.
+Author: Manindra
+License-Expression: MIT
+Project-URL: Homepage, https://github.com/manindra48/dogear
+Keywords: bookmarks,semantic-search,embeddings,cli,ai
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Classifier: Environment :: Console
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: fastembed>=0.3.0
+Requires-Dist: numpy>=1.24
+Provides-Extra: dev
+Requires-Dist: pytest>=7; extra == "dev"
+Requires-Dist: build; extra == "dev"
+Requires-Dist: twine; extra == "dev"
+
 <div align="center">
 
 # 🔖 Dogear
