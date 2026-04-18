@@ -103,25 +103,28 @@ pip install dogear
 </details>
 
 <details>
-<summary>Editable install for development</summary>
+<summary>From source (clone + uv)</summary>
 
 ```bash
-git clone https://github.com/manindra48/dogear.git
-cd dogear
-python3 -m venv .venv
-source .venv/bin/activate   # macOS / Linux — Windows: .venv\Scripts\Activate.ps1 or activate.bat
-pip install -e '.[dev]'
-dogear --help
+git clone https://github.com/manindra48/dogear.git && cd dogear
+uv sync
+uv run dogear --help
 ```
 
-If `python3 -m venv` fails (for example `ensurepip` errors on some **Python 3.14** installs), create the environment with an older interpreter you have installed, e.g. `python3.12 -m venv .venv` or `python3.11 -m venv .venv`.
-
-See [Development → Run from source](#run-from-source) for the full local workflow.
+Needs [uv](https://docs.astral.sh/uv/getting-started/installation/). Same run rules as [Quick Start → Run the CLI](#run-the-cli).
 </details>
 
 ---
 
 ## ⚡ Quick Start
+
+### Run the CLI
+
+| How you installed | Command form |
+|---|---|
+| **pipx** (or venv + `pip install` with venv activated) | `dogear …` |
+| **Git clone** (no activation) | In the repo: `uv run dogear …` |
+| **Git clone** (after `source .venv/bin/activate` or Windows `Activate.ps1`) | `dogear …` |
 
 ### 1️⃣ Export your bookmarks
 
@@ -295,54 +298,22 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for full detai
 
 ### Run from source
 
-Dogear is a **command-line tool**; there is no separate dev server. After an editable install, use the `dogear` entry point from your activated virtual environment.
+[Install uv](https://docs.astral.sh/uv/getting-started/installation/), then in the repo:
 
-1. **Clone and enter the repo** (skip if you already have it).
+```bash
+uv sync
+uv run dogear --help
+uv run pytest -q
+```
 
-   ```bash
-   git clone https://github.com/manindra48/dogear.git
-   cd dogear
-   ```
+`uv sync` creates `.venv`, installs the project editable, and dev deps (pytest, build, twine). Use `uv run dogear …` or activate `.venv` and run `dogear …` — see [Run the CLI](#run-the-cli).
 
-2. **Create and activate a virtual environment** (Python 3.9+).
-
-   ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate
-   ```
-
-   **Windows (PowerShell):** `python -m venv .venv; .venv\Scripts\Activate.ps1`  
-   **Windows (cmd):** `python -m venv .venv && .venv\Scripts\activate.bat`
-
-   If `python3 -m venv .venv` fails (for example `ensurepip` on some **Python 3.14** installs), use an explicit older interpreter: `python3.12 -m venv .venv` or `python3.11 -m venv .venv`.
-
-3. **Install in editable mode** (includes dev dependencies for tests).
-
-   ```bash
-   pip install -e '.[dev]'
-   ```
-
-4. **Verify the CLI**.
-
-   ```bash
-   dogear --help
-   ```
-
-5. **Use it** like the [Quick Start](#-quick-start): export bookmarks as HTML, then index and search.
-
-   ```bash
-   dogear index /path/to/bookmarks.html
-   dogear find "your search phrase"
-   dogear stats
-   dogear open "your search phrase"
-   ```
-
-By default the SQLite index lives under `~/.dogear/` (on Windows, `%LOCALAPPDATA%\dogear\`). To use another directory for data files, set **`DOGEAR_HOME`** to that folder, or pass **`--db /path/to/index.db`** on each command.
+Default index DB: `~/.dogear/` (Windows: `%LOCALAPPDATA%\dogear\`). Override with **`DOGEAR_HOME`** or **`--db /path/to/index.db`**.
 
 ### Tests
 
 ```bash
-pytest -q
+uv run pytest -q
 ```
 
 <details>
@@ -352,21 +323,21 @@ pytest -q
 
 1. Create an account at [pypi.org](https://pypi.org/account/register/)
 2. Generate an API token at [pypi.org/manage/account/token/](https://pypi.org/manage/account/token/)
-3. Install build tools: `pip install build twine`
+3. Build tools are included after `uv sync`; otherwise install with `pip install build twine`.
 
 ### Test on TestPyPI first (recommended)
 
 ```bash
-python -m build
-python -m twine upload --repository testpypi dist/*
+uv run python -m build
+uv run twine upload --repository testpypi dist/*
 pipx install --index-url https://test.pypi.org/simple/ dogear
 ```
 
 ### Publish to PyPI
 
 ```bash
-python -m build
-python -m twine upload dist/*
+uv run python -m build
+uv run twine upload dist/*
 ```
 
 Use `__token__` as the username when prompted.
@@ -410,8 +381,3 @@ docker run --rm -v $HOME/.dogear:/root/.dogear \
 ```
 </details>
 
----
-
-## 📄 License
-
-MIT — see [LICENSE](LICENSE).
